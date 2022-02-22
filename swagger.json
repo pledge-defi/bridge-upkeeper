@@ -1,0 +1,208 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Pledge management backend Restful APIs",
+    "version": "1.0.0",
+    "title": "Pledge Bridge",
+    "contact": {
+      "email": "zhouhui@findora.org"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "127.0.0.1:3000",
+  "basePath": "/api/v2",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/lockedCountdown": {
+      "post": {
+        "operationId": "lockedCountdown",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/LockedCountdown"
+            }
+          }
+        }
+      }
+    },
+    "/txsHistory": {
+      "post": {
+        "description": "",
+        "operationId": "txsHistory",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Pet object that needs to be added to the store",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/TxsHistoryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TxsHistory"
+            }
+          }
+        }
+      }
+    },
+    "/addTx": {
+      "post": {
+        "summary": "Add Tx",
+        "description": "",
+        "operationId": "addTx",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Pet object that needs to be added to the store",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/AddTxRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "LockedCountdown": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "TxsHistoryRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "txType": {
+          "type": "integer"
+        },
+        "page": {
+          "type": "integer",
+          "default": "1"
+        },
+        "pageSize": {
+          "type": "integer",
+          "default": "10"
+        }
+      }
+    },
+    "TxsHistory": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/HistoryData"
+        }
+      }
+    },
+    "HistoryData": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer"
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HistoryDetail"
+          }
+        }
+      }
+    },
+    "HistoryDetail": {
+      "type": "object",
+      "properties": {
+        "srcChain": {
+          "type": "string"
+        },
+        "destChain": {
+          "type": "string"
+        },
+        "asset": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "fee": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "depositHash": {
+          "type": "string"
+        },
+        "bridgeHash": {
+          "type": "string"
+        }
+      }
+    },
+    "AddTxRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "txType": {
+          "type": "integer"
+        },
+        "asset": {
+          "type": "string"
+        },
+        "txHash": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
