@@ -17,6 +17,7 @@ let web3 = new Web3(Web3.givenProvider || "https://data-seed-prebsc-1-s1.binance
 const account = web3.eth.accounts.privateKeyToAccount(privateKey);
 web3.eth.accounts.wallet.add(account);
 web3.eth.defaultAccount = account.address;
+console.log(account)
 
 let  contract = new web3.eth.Contract(pledgeBridgeBSCAbi, pledgeBridgeBSCAddress);
 
@@ -41,6 +42,8 @@ module.exports = {
 	      const data = {
           bridgeHash: bridgeHash
         };
+
+          如何获取到前端之前调用web3提交的交易
 
         ctx.model.TxHistory.update(data, {
           where: {
