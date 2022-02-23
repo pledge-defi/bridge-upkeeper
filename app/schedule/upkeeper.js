@@ -24,7 +24,7 @@ let  contract = new web3.eth.Contract(pledgeBridgeBSCAbi, pledgeBridgeBSCAddress
 module.exports = {
   schedule: {
     type: 'all', // 指定所有的 worker 都需要执行
-    cron: '*/5 * * * *' // 5min
+    cron: '*/59 * * * *' // 59min
     //cron: '10 * * * * *' // 第10S触发
     //cron: '0 0 * * * 7' // 周日午夜0点触发
   }, 
