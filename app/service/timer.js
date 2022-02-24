@@ -9,8 +9,8 @@ class TimerService extends Service {
 
         try {
             // var interval = parser.parseExpression('0 0 0 * * 0', options); // UTC 周日24点
-            var interval = parser.parseExpression('*/5 * * * *', options); // 10S 间隔
-            //var interval = parser.parseExpression('10 * * * * *', options); // 10S 间隔
+            // var interval = parser.parseExpression('*/59 * * * *', options); // 10S 间隔
+            var interval = parser.parseExpression('3600 * * * * *', options); // 10S 间隔
 
             const next = interval.next().toString();
             var nextTime = Date.parse(next);
