@@ -19,9 +19,9 @@ module.exports = {
             IsInit = 1
         }
         NowTime = parseInt(Date.now() / 1000);
-        if (NowTime - NextUnlockTime == 3600) {
+        if (NowTime - NextUnlockTime == 0) {
             NextUnlockTime = NowTime + 3600
-            ctx.model.UnlockTime.update({next_time: NextUnlockTime}, {
+            await ctx.model.UnlockTime.update({next_time: NextUnlockTime}, {
                 where: {
                     id: 1
                 }
