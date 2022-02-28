@@ -187,6 +187,12 @@
     "AddTxRequest": {
       "type": "object",
       "properties": {
+        "srcChain": {
+          "type": "string"
+        },
+        "destChain": {
+          "type": "string"
+        },
         "address": {
           "type": "string"
         },
