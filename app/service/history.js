@@ -40,7 +40,7 @@ class TimerService extends Service {
         console.log(8888)
 
         // store
-        await this.store(address, txType, txHash, srcChain, destChain, PLGR, amount, fee, timestamp);
+        await this.store(address, txType, txHash, srcChain, destChain, "", PLGR, amount, fee, timestamp);
     }
 
     async onETH(address, txType, txHash, amount, srcChain, destChain) {
@@ -51,10 +51,10 @@ class TimerService extends Service {
         if (timestamp == 0) return;
 
         // store
-        await this.store(address, txType, txHash, srcChain, destChain, MPLGR, amount, fee, timestamp);
+        await this.store(address, txType, txHash, srcChain, destChain, txHash, MPLGR, amount, fee, timestamp);
     }
 
-    async store(address, txType, txHash, srcChain, destChain, asset, amount, fee, timestamp) {
+    async store(address, txType, txHash, srcChain, destChain, bridgeHash, asset, amount, fee, timestamp) {
         console.log('timestamp: ', timestamp);
         // write to db
         const txHistory = await this.ctx.model.TxHistory.create({
@@ -63,6 +63,7 @@ class TimerService extends Service {
             depositHash: txHash,
             srcChain: srcChain,
             destChain: destChain,
+            bridgeHash: bridgeHash,
             asset: asset,
             amount: amount.toString(),
             fee: fee.toString(),
@@ -126,7 +127,6 @@ class TimerService extends Service {
         console.log(address, txType, asset, txHash, amount, srcChain, destChain)
         if (asset === "PLGR") {
             // calc tx info on BSC
-            console.log(9999)
             await this.onBSC(address, txType, txHash, amount, srcChain, destChain);
         } else if (asset === "MPLGR") {
             // calc tx info on ETH
