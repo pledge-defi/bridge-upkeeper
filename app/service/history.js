@@ -37,6 +37,7 @@ class TimerService extends Service {
 
         const timestamp = await this.onTxTime(0, txHash);
         if (timestamp == 0) return;
+        console.log(8888)
 
         // store
         await this.store(address, txType, txHash, srcChain, destChain, PLGR, amount, fee, timestamp);
@@ -122,12 +123,14 @@ class TimerService extends Service {
     }
 
     async addTx(address, txType, asset, txHash, amount, srcChain, destChain) {
+        console.log(address, txType, asset, txHash, amount, srcChain, destChain)
         if (asset === "PLGR") {
             // calc tx info on BSC
-            await this.onBSC(address, txType, txHash, amount);
+            console.log(9999)
+            await this.onBSC(address, txType, txHash, amount, srcChain, destChain);
         } else if (asset === "MPLGR") {
             // calc tx info on ETH
-            await this.onETH(address, txType, txHash, amount);
+            await this.onETH(address, txType, txHash, amount, srcChain, destChain);
         }
     }
 }

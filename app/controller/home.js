@@ -49,9 +49,9 @@ class HomeController extends Controller {
         const {ctx} = this;
 
         const {address, txType, asset, txHash, amount, srcChain, destChain} = ctx.request.body;
-        console.log('requet body:', ctx.request.body);
+        console.log('request body:', ctx.request.body);
 
-        if (!address || !asset || !txHash || amount === "" || srcChain === "" || destChain === "") {
+        if (!address || !asset || !txHash || amount === "" || !srcChain || !destChain) {
             ctx.status = 400;
             ctx.message = "bad request";
             return;
