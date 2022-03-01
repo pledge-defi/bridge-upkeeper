@@ -104,9 +104,9 @@ class TimerService extends Service {
 
         // default bsc web3
         let web3 = this.app.web3;
-        if (chainID == 0) {
+        if (chainID === 0) {
             web3 = this.app.web3;
-        } else if (chainID == 1) {
+        } else if (chainID === 1) {
             web3 = this.app.web3OnETH;
         } else {
             return 0; //error
@@ -122,10 +122,10 @@ class TimerService extends Service {
     }
 
     async addTx(address, txType, asset, txHash, amount, srcChain, destChain) {
-        if (asset == "PLGR") {
+        if (asset === "PLGR") {
             // calc tx info on BSC
             await this.onBSC(address, txType, txHash, amount);
-        } else if (asset == "MPLGR") {
+        } else if (asset === "MPLGR") {
             // calc tx info on ETH
             await this.onETH(address, txType, txHash, amount);
         }
