@@ -8,7 +8,7 @@ const MPLGR = "MPLGR";
 
 class TimerService extends Service {
     // txType: default 0 -> deposit / 1 -> withdraw
-    async txsHistory(address, txType=0, start=1, step=5) {
+    async txsHistory(address, txType = 0, start = 1, step = 5) {
         const curPage = start - 1;
         const pageSize = step;
         const offset = curPage * pageSize;
@@ -16,13 +16,13 @@ class TimerService extends Service {
         const Op = this.app.Sequelize.Op;
         const txs = await this.ctx.model.TxHistory.findAndCountAll({
             attributes: ['id', 'address', 'txType', 'depositHash', 'bridgeHash', 'srcChain', 'destChain', 'asset', 'amount', 'fee', 'timestamp'],
-            where: { 
-                txType : txType,
+            where: {
+                txType: txType,
                 address: address
             },
             offset: offset,
-            limit : pageSize,
-    	    order:  [['id', 'DESC']],
+            limit: pageSize,
+            order: [['id', 'DESC']],
         });
 
         // get all tx status 
@@ -31,34 +31,34 @@ class TimerService extends Service {
         return txs;
     }
 
-    async onBSC(address, txType, txHash, amount) {
+    async onBSC(address, txType, txHash, amount, srcChain, destChain) {
         const fee = await this.onFee(0, txHash);
-        if(fee == 0) return;
+        if (fee == 0) return;
 
         const timestamp = await this.onTxTime(0, txHash);
         if (timestamp == 0) return;
 
         // store
-        await this.store(address, txType, txHash, BSC, ETH, PLGR, amount, fee, timestamp);
+        await this.store(address, txType, txHash, srcChain, destChain, PLGR, amount, fee, timestamp);
     }
 
-    async onETH(address, txType, txHash, amount) {
+    async onETH(address, txType, txHash, amount, srcChain, destChain) {
         const fee = await this.onFee(1, txHash);
-        if(fee == 0) return;
+        if (fee == 0) return;
 
         const timestamp = await this.onTxTime(1, txHash);
         if (timestamp == 0) return;
 
         // store
-        await this.store(address, txType, txHash, ETH, BSC, MPLGR, amount, fee, timestamp);
-    }  
+        await this.store(address, txType, txHash, srcChain, destChain, MPLGR, amount, fee, timestamp);
+    }
 
     async store(address, txType, txHash, srcChain, destChain, asset, amount, fee, timestamp) {
-	    console.log('timestamp: ', timestamp);
+        console.log('timestamp: ', timestamp);
         // write to db
         const txHistory = await this.ctx.model.TxHistory.create({
             address: address,
-            txType: txType, 
+            txType: txType,
             depositHash: txHash,
             srcChain: srcChain,
             destChain: destChain,
@@ -84,7 +84,7 @@ class TimerService extends Service {
         const gasPrice = await web3.eth.getTransaction(txHash).then(function (res) {
             if (res) {
                 return res.gasPrice;
-            }    
+            }
         });
 
         const gasUsed = await web3.eth.getTransactionReceipt(txHash).then(function (res) {
@@ -93,14 +93,14 @@ class TimerService extends Service {
             }
         });
 
-        const fee = gasUsed * gasPrice / 10 **18;
-	    console.log('fee:', fee);
+        const fee = gasUsed * gasPrice / 10 ** 18;
+        console.log('fee:', fee);
         return fee;
     }
 
     async onTxTime(chainID, txHash) {
-	    console.log('chianID:', chainID);
-	    console.log('txHash:', txHash);
+        console.log('chianID:', chainID);
+        console.log('txHash:', txHash);
 
         // default bsc web3
         let web3 = this.app.web3;
@@ -112,16 +112,20 @@ class TimerService extends Service {
             return 0; //error
         }
 
-        const blockNum = await web3.eth.getTransaction(txHash).then(function (res) { return res.blockNumber; });
-        const timestamp = await web3.eth.getBlock(blockNum).then(function(res) { return res.timestamp; });
+        const blockNum = await web3.eth.getTransaction(txHash).then(function (res) {
+            return res.blockNumber;
+        });
+        const timestamp = await web3.eth.getBlock(blockNum).then(function (res) {
+            return res.timestamp;
+        });
         return timestamp;
     }
 
-    async addTx(address, txType, asset, txHash, amount) {
-        if(asset == "PLGR") {
+    async addTx(address, txType, asset, txHash, amount, srcChain, destChain) {
+        if (asset == "PLGR") {
             // calc tx info on BSC
             await this.onBSC(address, txType, txHash, amount);
-        } else if(asset == "MPLGR") {
+        } else if (asset == "MPLGR") {
             // calc tx info on ETH
             await this.onETH(address, txType, txHash, amount);
         }
