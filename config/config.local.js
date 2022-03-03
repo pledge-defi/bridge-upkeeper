@@ -52,7 +52,7 @@ module.exports = appInfo => {
     username: 'bridge',
     password: 'bridge',
     dialect: 'mysql',
-    host: '54.67.12.175',
+    host: '127.0.0.1',
     port: '3306',
     database: 'bridge',
   };
